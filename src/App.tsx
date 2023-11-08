@@ -1,10 +1,13 @@
 import React, { useRef, useState } from 'react';
 import './index.css';
-import Footer from './components/Footer';
+import logo from './assets/png/logo-no-background.png';
+import ActionContainer from './components/ActionContainer';
 import Header from './components/Header';
-import ResponsiveImage from './components/ResponsiveImage';
+import VideoFrame from './components/VideoFrame';
 import Hero from './components/Hero';
-import { useUploadVideo } from './services/api';
+import { useUploadVideo, useProcessCoordinates } from './services/api';
+
+import { VideoResolution } from './services/interface';
 
 interface Coordinate {
   x: number;
@@ -18,7 +21,12 @@ function App() {
   const [isImageReady, setIsImageReady] = useState<boolean>(false);
   const [videoFile, setVideoFile] = useState<File | null>(null);
 
-  const { uploadVideo, isLoading: isVideoLoading } = useUploadVideo();
+  const { uploadVideo, isLoading: isVideoLoading, videoInformation } = useUploadVideo();
+  const {
+    structureCoordinates,
+    processCoordinates,
+    calculateResolutionDifferenceIndex,
+  } = useProcessCoordinates();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -59,8 +67,27 @@ function App() {
   };
 
   const handleConfirm = () => {
-    // eslint-disable-next-line no-console
-    console.log(coordinates);
+    if (!videoInformation) {
+      return;
+    }
+
+    const deviceResolution: VideoResolution = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
+
+    const resolutionDifferenceIndex = calculateResolutionDifferenceIndex(
+      videoInformation.resolution,
+      deviceResolution,
+    );
+
+    const structuredCoordinates = structureCoordinates(
+      videoInformation.uuid,
+      coordinates,
+      resolutionDifferenceIndex,
+    );
+
+    processCoordinates(structuredCoordinates);
   };
 
   const handleReset = () => {
@@ -74,32 +101,35 @@ function App() {
       setVideoFile(file);
       uploadVideo(file);
     }
+
+    setIsImageReady(true);
   };
 
   const handleExit = () => {
     setIsImageReady(false);
+    setVideoFile(null);
+    setCoordinates([]);
   };
 
   return (
     <div>
-      <Header isImageReady={isImageReady} onExit={handleExit} />
-      { isImageReady
-        ? <ResponsiveImage
-          src="https://picsum.photos/200/300"
-          alt="Dummy"
+      <Header isImageReady={isImageReady} onExit={handleExit} logo={logo} />
+      { !isVideoLoading && videoInformation
+        ? <VideoFrame
+          src={videoInformation.frameImageUrl}
+          alt="Image"
           onPointsSelect={handleClicks}
           coordinates={coordinates}
         />
         : <Hero />}
-      { isVideoLoading ? 'Video loading' : ''}
-      <Footer
+      <ActionContainer
         onPointsRedo={handleRedo}
         onPointsUndo={handleUndo}
         onConfirm={handleConfirm}
         onReset={handleReset}
         onUploadVideo={handleUploadVideo}
-        isImageReady={isImageReady}
-        isVideoUploaded={!!videoFile}
+        isImageReady={!!videoInformation}
+        isVideoUploaded={!!videoInformation}
         file={videoFile}
         fileInputRef={fileInputRef}
         openFilePicker={openFilePicker}

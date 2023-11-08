@@ -1,22 +1,21 @@
 import React from 'react';
-import logo from '../assets/png/logo-no-background.png';
 
 interface HeaderProps {
   isImageReady: boolean;
   onExit: () => void;
+  logo: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ onExit, isImageReady }) => (
-  <div className="fixed top-0 w-full text-white p-2 flex items-center justify-around navigation">
+const Header: React.FC<HeaderProps> = ({ onExit, isImageReady, logo }) => (
+  <div className="fixed top-0 w-full text-white p-2 flex items-center justify-around header">
     <img
       src={logo}
       alt="logo"
-      width={150}
-      height={50}
+      className="header-logo"
     />
     { isImageReady && (
       <button type="button" className="custom-button transparent-button" onClick={onExit}>
-        <span className="transparent-button-text">Choose different video</span>
+        <span className="transparent-button-text">Exit</span>
       </button>
     )}
   </div>

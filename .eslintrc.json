@@ -13,6 +13,7 @@
     "react/jsx-one-expression-per-line": "off",
     "react/jsx-wrap-multilines": "off",
     "react/function-component-definition": "off",
+    "react/no-array-index-key": "off",
     "react/prop-types": "off",
     "@typescript-eslint/indent": ["error", 2],
     "@typescript-eslint/comma-dangle": ["error", {

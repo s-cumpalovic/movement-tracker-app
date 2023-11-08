@@ -13,7 +13,7 @@ interface FooterProps {
   openFilePicker: () => void;
 }
 
-const Footer: React.FC<FooterProps> = ({
+const ActionContainer: React.FC<FooterProps> = ({
   isImageReady,
   isVideoUploaded,
   file,
@@ -62,4 +62,4 @@ const Footer: React.FC<FooterProps> = ({
   </div>
 );
 
-export default Footer;
+export default ActionContainer;

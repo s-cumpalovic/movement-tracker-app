@@ -1,18 +1,24 @@
 /* Header.tsx stylers */
 
-.navigation {
+.header {
     z-index: 1;
     background-color: transparent;
     color: var(--thicker-blue);
     display: flex;
     justify-content: space-between;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .transparent-button {
-    background-color: rgba(0, 0, 0, 0.07);
-    width: auto !important;
+    background-color: var(--soft-red);
+    width: 4rem !important;
 }
 
 .transparent-button-text {
-    color: var(--thicker-blue);
+    color: var(--thicker-red);
+}
+
+.header-logo {
+    width: 10rem;
+    height: auto;
 }

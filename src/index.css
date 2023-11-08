@@ -2,6 +2,7 @@
 @import 'styles/header.css';
 @import 'styles/footer.css';
 @import 'styles/hero.css';
+@import 'styles/video-frame.css';
 
 :root {
     --soft-green: #e0f8e9;
