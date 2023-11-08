@@ -9,7 +9,7 @@
   "rules": {
     "react/jsx-filename-extension": [1, { "extensions": [".tsx"] }],
     "react/jsx-indent": [2, 2],
-    "react/jsx-indent-props": [2, 2],
+    "react/jsx-indent-props": "off",
     "react/jsx-one-expression-per-line": "off",
     "react/jsx-wrap-multilines": "off",
     "react/function-component-definition": "off",
@@ -22,6 +22,16 @@
       "exports": "always-multiline",
       "functions": "ignore"
     }],
-    "@typescript-eslint/explicit-function-return-type": "off"
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["public"]
+      }
+    }
   }
 }

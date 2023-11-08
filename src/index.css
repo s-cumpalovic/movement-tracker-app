@@ -1,0 +1,22 @@
+@import "styles/tailwind.css";
+@import 'styles/header.css';
+@import 'styles/footer.css';
+@import 'styles/hero.css';
+
+:root {
+    --soft-green: #e0f8e9;
+    --thicker-green: #67c993;
+
+    --soft-orange: #fbebdb;
+    --thicker-orange: #f8b669;
+
+    --soft-purple: #f1ebf8;
+    --thicker-purple: #9d80bf;
+
+    --soft-red: #f7d4d4;
+    --thicker-red: #e04d4d;
+
+    --soft-blue: #e0edff;
+    --thicker-blue: #4d73e0;
+}
+
