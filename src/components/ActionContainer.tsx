@@ -25,7 +25,7 @@ const Footer: React.FC<FooterProps> = ({
   fileInputRef,
   openFilePicker,
 }) => (
-  <div className="fixed bottom-0 w-full text-white flex items-center justify-around main-footer">
+  <div className="fixed bottom-0 w-full text-white flex items-center justify-around footer">
     {!isImageReady ? (
       <div>
         <input
@@ -51,7 +51,7 @@ const Footer: React.FC<FooterProps> = ({
         <button type="button" className="custom-button purple-button" onClick={onPointsRedo}>
           Redo
         </button>
-        <button type="button" className="custom-button red-button" onClick={onReset}>
+        <button type="button" className="custom-button yellow-button" onClick={onReset}>
           Reset
         </button>
         <button type="button" className="custom-button green-button" onClick={onConfirm}>

@@ -1,0 +1,8 @@
+{
+  "uuid": "neki-random-uuid",
+  "frameImageUrl": "https://picsum.photos/200/300",
+  "resolution": {
+    "width": 900,
+    "height": 1400
+  }
+}
