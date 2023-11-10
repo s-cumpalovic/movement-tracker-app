@@ -19,7 +19,12 @@ export interface CoordinatesInformation {
   coordinates: ImageCoordinates,
 }
 
-export interface VideoResolutionDifferenceIndex {
-  widthDiffIndex: number,
-  heightDiffIndex: number,
+export interface IChartData {
+  x: number;
+  time: number;
+}
+
+export interface CoordinatesChartInformation {
+  videoUrl: string,
+  trackingData: IChartData[][];
 }

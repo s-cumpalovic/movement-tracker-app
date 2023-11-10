@@ -1,7 +1,8 @@
 .hero-container {
-    margin-top: 20rem;
     margin-left: 2rem;
     gap: 2rem;
-    display: grid;
+    display: flex;
     justify-content: flex-start;
+    padding: 5%;
+    margin-bottom: 10%
 }

@@ -16,6 +16,7 @@
     "react/no-array-index-key": "off",
     "react/prop-types": "off",
     "@typescript-eslint/indent": ["error", 2],
+    "no-console": "off",
     "@typescript-eslint/comma-dangle": ["error", {
       "arrays": "always-multiline",
       "objects": "always-multiline",

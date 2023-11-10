@@ -1,7 +1,6 @@
 /* Header.tsx stylers */
 
 .header {
-    z-index: 1;
     background-color: transparent;
     color: var(--thicker-blue);
     display: flex;
@@ -11,7 +10,7 @@
 
 .transparent-button {
     background-color: var(--soft-red);
-    width: 4rem !important;
+    width: fit-content !important;
 }
 
 .transparent-button-text {

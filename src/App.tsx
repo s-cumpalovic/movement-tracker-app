@@ -4,29 +4,32 @@ import logo from './assets/png/logo-no-background.png';
 import ActionContainer from './components/ActionContainer';
 import Header from './components/Header';
 import VideoFrame from './components/VideoFrame';
-import Hero from './components/Hero';
-import { useUploadVideo, useProcessCoordinates } from './services/api';
-
-import { VideoResolution } from './services/interface';
-
-interface Coordinate {
-  x: number;
-  y: number;
-}
+import { ICoordinate } from './components/VideoFrame/constants';
+import { structureCoordinates } from './services/calculation/videoResolution';
+import { CoordinatesChartInformation, VideoInformation } from './services/interface';
+import { uploadCoordinates, uploadVideo } from './services/api/mainApi';
+import { ButtonActions } from './components/Action/constants';
+import VideoPreview from './components/VideoFrame/VideoPreview';
+import Chart from './components/Chart';
 
 function App() {
-  const [coordinates, setCoordinates] = useState<Coordinate[]>([]);
-  const [undoStack, setUndoStack] = useState<Coordinate[][]>([]);
-  const [redoStack, setRedoStack] = useState<Coordinate[][]>([]);
-  const [isImageReady, setIsImageReady] = useState<boolean>(false);
-  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [coordinates, setCoordinates] = useState<ICoordinate[]>([]);
+  const [undoStack, setUndoStack] = useState<ICoordinate[][]>([]);
+  const [redoStack, setRedoStack] = useState<ICoordinate[][]>([]);
+  const [coordinatesOffset, setCoordinatesOffset] = useState<ICoordinate>({
+    x: 0,
+    y: 0,
+  });
 
-  const { uploadVideo, isLoading: isVideoLoading, videoInformation } = useUploadVideo();
-  const {
-    structureCoordinates,
-    processCoordinates,
-    calculateResolutionDifferenceIndex,
-  } = useProcessCoordinates();
+  const [videoInformation, setVideoInformation] = useState<VideoInformation | undefined>();
+  const [showAction, setShowAction] = useState<ButtonActions>(ButtonActions.UPLOAD);
+  const [showVideo, setShowVideo] = useState<boolean>(false);
+  const [showChart, setShowChart] = useState<boolean>(false);
+
+  const [
+    chartCoordinates,
+    setChartCoordinates,
+  ] = useState<CoordinatesChartInformation | undefined>();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -36,9 +39,20 @@ function App() {
     }
   };
 
-  const handleClicks = (event: React.MouseEvent) => {
-    const x = event.clientX;
-    const y = event.clientY;
+  const handleClicks = (event: any) => {
+    const parent = document.getElementById('video-frame-container');
+
+    if (!parent) {
+      return;
+    }
+
+    const bounds = event.target.getBoundingClientRect();
+
+    const offset: ICoordinate = { x: bounds.left, y: bounds.top };
+    setCoordinatesOffset(offset);
+
+    const x = event.clientX - offset.x;
+    const y = event.clientY - offset.y;
 
     const newCoordinates = [...coordinates, { x, y }];
     setCoordinates(newCoordinates);
@@ -47,91 +61,111 @@ function App() {
   };
 
   const handleUndo = () => {
-    if (undoStack.length > 0) {
-      const newUndoStack = undoStack.slice(0, -1);
-      const lastCoordinates = undoStack[undoStack.length - 1];
-      setCoordinates(lastCoordinates);
-      setRedoStack([...redoStack, coordinates]);
-      setUndoStack(newUndoStack);
-    }
-  };
-
-  const handleRedo = () => {
-    if (redoStack.length > 0) {
-      const newRedoStack = redoStack.slice(0, -1);
-      const nextCoordinates = redoStack[redoStack.length - 1];
-      setCoordinates(nextCoordinates);
-      setUndoStack([...undoStack, coordinates]);
-      setRedoStack(newRedoStack);
-    }
-  };
-
-  const handleConfirm = () => {
-    if (!videoInformation) {
+    if (undoStack.length < 1) {
       return;
     }
 
-    const deviceResolution: VideoResolution = {
-      width: window.innerWidth,
-      height: window.innerHeight,
-    };
+    const newUndoStack = undoStack.slice(0, -1);
+    const lastCoordinates = undoStack[undoStack.length - 1];
+    setCoordinates(lastCoordinates);
+    setRedoStack([...redoStack, coordinates]);
+    setUndoStack(newUndoStack);
+  };
 
-    const resolutionDifferenceIndex = calculateResolutionDifferenceIndex(
-      videoInformation.resolution,
-      deviceResolution,
-    );
+  const handleRedo = () => {
+    if (redoStack.length < 1) {
+      return;
+    }
+
+    const newRedoStack = redoStack.slice(0, -1);
+    const nextCoordinates = redoStack[redoStack.length - 1];
+    setCoordinates(nextCoordinates);
+    setUndoStack([...undoStack, coordinates]);
+    setRedoStack(newRedoStack);
+  };
+
+  const handleConfirm = async () => {
+    if (!videoInformation || coordinates.length < 1) {
+      return;
+    }
 
     const structuredCoordinates = structureCoordinates(
       videoInformation.uuid,
       coordinates,
-      resolutionDifferenceIndex,
     );
 
-    processCoordinates(structuredCoordinates);
+    const chartCoordinatesData = await uploadCoordinates(structuredCoordinates);
+    setChartCoordinates(chartCoordinatesData ?? undefined);
+    setShowAction(ButtonActions.PREVIEW);
   };
 
   const handleReset = () => {
     setCoordinates([]);
   };
 
-  const handleUploadVideo = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUploadVideo = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
-    if (file) {
-      setVideoFile(file);
-      uploadVideo(file);
+    if (!file) {
+      return;
     }
 
-    setIsImageReady(true);
+    const videoInformationData = await uploadVideo(file);
+    setShowAction(ButtonActions.PROCESS);
+    setVideoInformation(videoInformationData ?? undefined);
   };
 
   const handleExit = () => {
-    setIsImageReady(false);
-    setVideoFile(null);
+    setVideoInformation(undefined);
     setCoordinates([]);
+    setShowAction(ButtonActions.UPLOAD);
+  };
+
+  const handlePreviewChart = () => {
+    setShowVideo(false);
+    setShowChart(true);
+  };
+
+  const handlePreviewVideo = () => {
+    setShowVideo(true);
+    setShowChart(false);
   };
 
   return (
     <div>
-      <Header isImageReady={isImageReady} onExit={handleExit} logo={logo} />
-      { !isVideoLoading && videoInformation
-        ? <VideoFrame
+      <Header
+        showExitButton={showAction !== ButtonActions.UPLOAD}
+        onExit={handleExit}
+        logo={logo}
+      />
+      { videoInformation && showAction !== ButtonActions.PREVIEW
+        && <VideoFrame
           src={videoInformation.frameImageUrl}
           alt="Image"
+          width={videoInformation.resolution.width}
+          height={videoInformation.resolution.height}
           onPointsSelect={handleClicks}
           coordinates={coordinates}
-        />
-        : <Hero />}
+          offset={coordinatesOffset}
+        /> }
+
+      { showAction === ButtonActions.PREVIEW
+        && showVideo
+        && <VideoPreview src={chartCoordinates?.videoUrl ?? ''} />}
+
+      {showAction === ButtonActions.PREVIEW
+        && showChart
+        && <Chart chartData={chartCoordinates?.trackingData!} />}
       <ActionContainer
-        onPointsRedo={handleRedo}
-        onPointsUndo={handleUndo}
+        showAction={showAction}
+        fileInputRef={fileInputRef}
         onConfirm={handleConfirm}
+        onPointsUndo={handleUndo}
+        onPointsRedo={handleRedo}
+        onPreviewChart={handlePreviewChart}
+        onPreviewVideo={handlePreviewVideo}
         onReset={handleReset}
         onUploadVideo={handleUploadVideo}
-        isImageReady={!!videoInformation}
-        isVideoUploaded={!!videoInformation}
-        file={videoFile}
-        fileInputRef={fileInputRef}
         openFilePicker={openFilePicker}
       />
     </div>

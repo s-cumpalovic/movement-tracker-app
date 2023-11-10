@@ -3,16 +3,15 @@ import { ICoordinate } from './constants';
 
 export interface CoordinateProps {
   coordinate: ICoordinate;
-  id: any;
+  offset: ICoordinate;
 }
 
-const Coordinate: React.FC<CoordinateProps> = ({ coordinate, id }) => (
+const Coordinate: React.FC<CoordinateProps> = ({ coordinate, offset }) => (
   <div
-    key={id}
     className="coordinate-dot"
     style={{
       position: 'absolute',
-      left: coordinate.x,
+      left: coordinate.x + offset.x,
       top: coordinate.y,
       width: '10px',
       height: '10px',

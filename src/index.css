@@ -4,6 +4,10 @@
 @import 'styles/hero.css';
 @import 'styles/video-frame.css';
 
+html, body {
+    min-height: 100%;
+}
+
 :root {
     --soft-green: #e0f8e9;
     --thicker-green: #67c993;
