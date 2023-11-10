@@ -5,10 +5,9 @@ interface VideoPreviewProps {
 }
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({ src }) => (
-  // eslint-disable-next-line jsx-a11y/media-has-caption
-  <video>
+  <video controls>
     <source src={src} />
-    <track defaultValue="Ja sam pera" />
+    <track kind="captions" label="English" srcLang="en" default />
   </video>
 );
 

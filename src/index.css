@@ -3,9 +3,16 @@
 @import 'styles/footer.css';
 @import 'styles/hero.css';
 @import 'styles/video-frame.css';
+@import 'styles/button.css';
 
-html, body {
+.html {
+    font-size: 16px;
+}
+
+.body {
     min-height: 100%;
+    background-color: var(--platinum);
+    font-size: 1rem;
 }
 
 :root {
@@ -23,5 +30,18 @@ html, body {
 
     --soft-blue: #e0edff;
     --thicker-blue: #4d73e0;
+
+    --platinum: #f3f3f3;
 }
 
+@media screen and (max-width: 991px) {
+    html {
+        font-size: 12px;
+    }
+}
+
+@media screen and (min-width: 992px) and (max-width: 1199px) {
+    html {
+        font-size: 13px;
+    }
+}

@@ -13,6 +13,7 @@ const Chart: React.FC<ChartProps> = ({ chartData }) => {
       animations: {
         enabled: false,
       },
+      background: '#FFFFFF',
     },
     stroke: {
       width: 3,
@@ -53,8 +54,6 @@ const Chart: React.FC<ChartProps> = ({ chartData }) => {
     },
   };
 
-  console.log(chartData);
-
   const series: ApexChartSeries[] = chartData ? Object.values(chartData).map((data, index) => {
     const seriesData: ApexChartSeriesData[] = data.map((item) => ({
       x: item.time,
@@ -66,7 +65,11 @@ const Chart: React.FC<ChartProps> = ({ chartData }) => {
     };
   }) : [];
 
-  return <ReactApexChart options={options} series={series} />;
+  return (
+    <div className="chart-container">
+      <ReactApexChart options={options} series={series} />;
+    </div>
+  );
 };
 
 export default Chart;

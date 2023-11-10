@@ -1,7 +1,7 @@
 /* Header.tsx stylers */
 
 .header {
-    background-color: transparent;
+    background-color: white;
     color: var(--thicker-blue);
     display: flex;
     justify-content: space-between;

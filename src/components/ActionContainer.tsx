@@ -1,44 +1,28 @@
 import React from 'react';
-import UploadAction from './Action/UploadAction';
 import ProcessActions from './Action/ProcessActions';
 import { ButtonActions } from './Action/constants';
 import PreviewActions from './Action/PreviewActions';
 
 interface FooterProps {
   showAction: ButtonActions;
+  onConfirm: () => void;
   onPointsUndo: () => void;
   onPointsRedo: () => void;
-  onConfirm: () => void;
-  onReset: () => void;
-  onUploadVideo: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onPreviewChart: () => void;
   onPreviewVideo: () => void;
-  fileInputRef: React.RefObject<HTMLInputElement>;
-  openFilePicker: () => void;
+  onReset: () => void;
 }
 
 const ActionContainer: React.FC<FooterProps> = ({
   showAction,
+  onConfirm,
   onPointsRedo,
   onPointsUndo,
-  onConfirm,
-  onReset,
-  onUploadVideo,
   onPreviewChart,
   onPreviewVideo,
-  fileInputRef,
-  openFilePicker,
+  onReset,
 }) => (
-  <div className="bottom-0 w-full text-white flex items-center justify-around footer">
-    {showAction === ButtonActions.UPLOAD && (
-      <UploadAction
-        label="Upload video"
-        onUploadVideo={onUploadVideo}
-        fileInputRef={fileInputRef}
-        openFilePicker={openFilePicker}
-      />
-    )}
-
+  <div className="w-full bg-white flex items-center justify-around footer">
     {showAction === ButtonActions.PROCESS && (
       <ProcessActions
         onPointsUndo={onPointsUndo}

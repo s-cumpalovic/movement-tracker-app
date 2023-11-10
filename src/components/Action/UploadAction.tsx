@@ -13,19 +13,20 @@ const UploadAction: React.FC<ActionProps> = ({
   openFilePicker,
   label,
 }) => (
-  <div>
+  <div className="custom-upload-container">
     <input
       type="file"
       accept=".mp4"
-      className="custom-button blue-button"
+      className="custom-button-file"
       ref={fileInputRef as React.RefObject<HTMLInputElement>}
       onChange={onUploadVideo}
     />
     <button
+      className="upload-button"
       onClick={openFilePicker}
       type="button"
     >
-      { label }
+      {label}
     </button>
   </div>
 );

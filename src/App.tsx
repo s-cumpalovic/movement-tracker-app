@@ -11,6 +11,7 @@ import { uploadCoordinates, uploadVideo } from './services/api/mainApi';
 import { ButtonActions } from './components/Action/constants';
 import VideoPreview from './components/VideoFrame/VideoPreview';
 import Chart from './components/Chart';
+import HeroSection from './components/HeroSection';
 
 function App() {
   const [coordinates, setCoordinates] = useState<ICoordinate[]>([]);
@@ -138,6 +139,13 @@ function App() {
         onExit={handleExit}
         logo={logo}
       />
+      { showAction === ButtonActions.UPLOAD && (
+        <HeroSection
+          openFilePicker={openFilePicker}
+          fileInputRef={fileInputRef}
+          onUploadVideo={handleUploadVideo}
+        />
+      )}
       { videoInformation && showAction !== ButtonActions.PREVIEW
         && <VideoFrame
           src={videoInformation.frameImageUrl}
@@ -158,15 +166,12 @@ function App() {
         && <Chart chartData={chartCoordinates?.trackingData!} />}
       <ActionContainer
         showAction={showAction}
-        fileInputRef={fileInputRef}
         onConfirm={handleConfirm}
         onPointsUndo={handleUndo}
         onPointsRedo={handleRedo}
         onPreviewChart={handlePreviewChart}
         onPreviewVideo={handlePreviewVideo}
         onReset={handleReset}
-        onUploadVideo={handleUploadVideo}
-        openFilePicker={openFilePicker}
       />
     </div>
   );
