@@ -14,6 +14,7 @@ const Chart: React.FC<ChartProps> = ({ chartData }) => {
         enabled: false,
       },
       background: '#FFFFFF',
+      height: 'auto',
     },
     stroke: {
       width: 3,
@@ -24,6 +25,9 @@ const Chart: React.FC<ChartProps> = ({ chartData }) => {
     },
     dataLabels: {
       enabled: false,
+    },
+    grid: {
+      show: false,
     },
     legend: {
       show: true,
@@ -52,6 +56,12 @@ const Chart: React.FC<ChartProps> = ({ chartData }) => {
         text: 'Relative change',
       },
     },
+    toolbar: {
+      show: true,
+      tools: {
+        download: '<img alt="pera" src="https://picsum.photos/60" class="ico-download" width="50">',
+      },
+    },
   };
 
   const series: ApexChartSeries[] = chartData ? Object.values(chartData).map((data, index) => {
@@ -65,9 +75,18 @@ const Chart: React.FC<ChartProps> = ({ chartData }) => {
     };
   }) : [];
 
+  const renderHeight = () => {
+    if (window.innerWidth > 992) {
+      return window.innerHeight - 500;
+    }
+    return 400;
+  };
+
   return (
     <div className="chart-container">
-      <ReactApexChart options={options} series={series} />;
+      <div className="responsive-chart">
+        <ReactApexChart options={options} series={series} height={renderHeight()} />
+      </div>
     </div>
   );
 };

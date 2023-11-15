@@ -4,26 +4,25 @@
     align-items: center;
     text-align: center;
     padding: 5%;
-    margin-bottom: 10%;
+    margin-bottom: 10rem;
 }
 
 .headline {
     padding: 2rem;
-    margin-bottom: 5%;
 }
 
 .headline h1 {
-    font-size: 4.5rem;
+    font-size: 4rem;
     color: var(--thicker-blue);
     font-weight: bold;
 }
 
 .step {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .step h1 {
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin-bottom: 1rem;
 }
 
@@ -50,9 +49,9 @@
     border: 1px solid var(--thicker-blue);
     border-radius: 0.25rem;
     cursor: pointer;
-    font-size: 2rem;
+    font-size: 1.75rem;
     margin: 0.2rem;
-    padding: 0.5rem 5rem;
+    padding: 0.5rem 4rem;
     transition: background-color 0.3s, color 0.3s;
     color: var(--thicker-blue);
     background-color: var(--soft-blue);

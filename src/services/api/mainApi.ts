@@ -1,6 +1,10 @@
 import axios from 'axios';
 import { API_URL, endpoints } from '../constants';
-import { CoordinatesChartInformation, CoordinatesInformation, VideoInformation } from '../interface';
+import {
+  CoordinatesChartInformation,
+  CoordinatesInformation, SaveVideoInformation,
+  VideoInformation,
+} from '../interface';
 
 export async function uploadVideo(videoFile: File) {
   try {
@@ -18,6 +22,16 @@ export async function uploadVideo(videoFile: File) {
 export async function uploadCoordinates(coordinates: CoordinatesInformation) {
   try {
     const response = await axios.post<CoordinatesChartInformation>(`${API_URL}${endpoints.COORDINATES}`, coordinates);
+    return response.data;
+  } catch (error: unknown) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function saveVideo(data: SaveVideoInformation) {
+  try {
+    const response = await axios.post<CoordinatesChartInformation>(`${API_URL}${endpoints.CREATE_VIDEO}`, data);
     return response.data;
   } catch (error: unknown) {
     console.error(error);

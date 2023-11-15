@@ -5,18 +5,18 @@ interface ActionProps {
   onPreviewChart: () => void;
 }
 
-const UploadAction: React.FC<ActionProps> = ({
+const PreviewActions: React.FC<ActionProps> = ({
   onPreviewVideo,
   onPreviewChart,
 }) => (
-  <>
-    <button type="button" className="custom-button green-button" onClick={onPreviewVideo}>
-      Video
+  <div className="preview-actions">
+    <button type="button" className="custom-button purple-button" onClick={onPreviewVideo}>
+      View Video
     </button>
-    <button type="button" className="custom-button yellow-button" onClick={onPreviewChart}>
-      Chart
+    <button type="button" className="custom-button purple-button" onClick={onPreviewChart}>
+      View Chart
     </button>
-  </>
+  </div>
 );
 
-export default UploadAction;
+export default PreviewActions;

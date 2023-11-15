@@ -7,16 +7,18 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onExit, showExitButton, logo }) => (
-  <div className="top-0 w-full p-2 flex items-center justify-around header">
+  <div className="header">
     <img
       src={logo}
       alt="logo"
       className="header-logo"
     />
     { showExitButton && (
-      <button type="button" className="custom-button transparent-button" onClick={onExit}>
-        <span className="transparent-button-text">Choose different video</span>
-      </button>
+      <div className="button-wrapper">
+        <button type="button" className="transparent-button" onClick={onExit}>
+          <span className="transparent-button-text">Choose different video</span>
+        </button>
+      </div>
     )}
   </div>
 );

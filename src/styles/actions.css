@@ -1,0 +1,44 @@
+.actions {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
+}
+
+.save-video-wrapper {
+    width: 100%;
+    background-color: white;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.preview-actions-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+.preview-actions {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+@media screen and (max-width: 992px) {
+    .actions {
+        padding: 1rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .actions {
+        padding: 0.5rem;
+    }
+}

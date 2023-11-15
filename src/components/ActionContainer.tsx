@@ -2,6 +2,7 @@ import React from 'react';
 import ProcessActions from './Action/ProcessActions';
 import { ButtonActions } from './Action/constants';
 import PreviewActions from './Action/PreviewActions';
+import SaveVideoButton from './Action/SaveVideoButton';
 
 interface FooterProps {
   showAction: ButtonActions;
@@ -11,6 +12,7 @@ interface FooterProps {
   onPreviewChart: () => void;
   onPreviewVideo: () => void;
   onReset: () => void;
+  onSaveVideo: () => void;
 }
 
 const ActionContainer: React.FC<FooterProps> = ({
@@ -21,8 +23,9 @@ const ActionContainer: React.FC<FooterProps> = ({
   onPreviewChart,
   onPreviewVideo,
   onReset,
+  onSaveVideo,
 }) => (
-  <div className="w-full bg-white flex items-center justify-around footer">
+  <div className="actions">
     {showAction === ButtonActions.PROCESS && (
       <ProcessActions
         onPointsUndo={onPointsUndo}
@@ -33,12 +36,14 @@ const ActionContainer: React.FC<FooterProps> = ({
     )}
 
     {showAction === ButtonActions.PREVIEW && (
-      <PreviewActions
-        onPreviewVideo={onPreviewVideo}
-        onPreviewChart={onPreviewChart}
-      />
+      <div className="preview-actions-container">
+        <PreviewActions
+          onPreviewVideo={onPreviewVideo}
+          onPreviewChart={onPreviewChart}
+        />
+        <SaveVideoButton onClick={onSaveVideo} />
+      </div>
     )}
-
   </div>
 );
 

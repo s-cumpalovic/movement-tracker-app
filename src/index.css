@@ -1,9 +1,13 @@
-@import "styles/tailwind.css";
+@import 'styles/tailwind.css';
 @import 'styles/header.css';
-@import 'styles/footer.css';
+@import 'styles/actions.css';
 @import 'styles/hero.css';
 @import 'styles/video-frame.css';
 @import 'styles/button.css';
+@import 'styles/video-preview.css';
+@import 'styles/apexchart.css';
+@import 'styles/save-video-modal.css';
+@import 'styles/loader.css';
 
 .html {
     font-size: 16px;
@@ -13,6 +17,12 @@
     min-height: 100%;
     background-color: var(--platinum);
     font-size: 1rem;
+}
+
+#root {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 :root {

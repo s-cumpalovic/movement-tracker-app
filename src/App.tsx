@@ -1,17 +1,19 @@
 import React, { useRef, useState } from 'react';
 import './index.css';
-import logo from './assets/png/logo-no-background.png';
+import logo from './assets/png/logo.png';
 import ActionContainer from './components/ActionContainer';
 import Header from './components/Header';
 import VideoFrame from './components/VideoFrame';
 import { ICoordinate } from './components/VideoFrame/constants';
 import { structureCoordinates } from './services/calculation/videoResolution';
-import { CoordinatesChartInformation, VideoInformation } from './services/interface';
-import { uploadCoordinates, uploadVideo } from './services/api/mainApi';
+import { CoordinatesChartInformation, SaveVideoInformation, VideoInformation } from './services/interface';
+import { saveVideo, uploadCoordinates, uploadVideo } from './services/api/mainApi';
 import { ButtonActions } from './components/Action/constants';
 import VideoPreview from './components/VideoFrame/VideoPreview';
 import Chart from './components/Chart';
 import HeroSection from './components/HeroSection';
+import SaveVideoModal from './components/Modal/SaveVideoModal';
+import Loader from './components/Loader';
 
 function App() {
   const [coordinates, setCoordinates] = useState<ICoordinate[]>([]);
@@ -26,6 +28,8 @@ function App() {
   const [showAction, setShowAction] = useState<ButtonActions>(ButtonActions.UPLOAD);
   const [showVideo, setShowVideo] = useState<boolean>(false);
   const [showChart, setShowChart] = useState<boolean>(false);
+  const [showSaveModal, setShowSaveModal] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const [
     chartCoordinates,
@@ -39,6 +43,35 @@ function App() {
       fileInputRef.current.click();
     }
   };
+
+  function adaptCoordinatesToMedia(coordinateData: ICoordinate[]): ICoordinate[] {
+    const parent = document.getElementById('video-frame-container');
+
+    if (!videoInformation?.resolution || !parent) {
+      return coordinateData;
+    }
+
+    const parentBound = parent.getBoundingClientRect();
+
+    const { width: videoWidth, height: videoHeight } = videoInformation.resolution;
+
+    const resizedCoordinates = coordinateData.map(({ x, y }) => {
+      let modifiedX = x;
+      let modifiedY = y;
+
+      if (videoWidth > parentBound.width) {
+        modifiedX = (x * videoWidth) / parentBound.width;
+      }
+
+      if (videoHeight > parentBound.height) {
+        modifiedY = (y * videoHeight) / parentBound.height;
+      }
+
+      return { x: modifiedX, y: modifiedY };
+    });
+
+    return resizedCoordinates;
+  }
 
   const handleClicks = (event: any) => {
     const parent = document.getElementById('video-frame-container');
@@ -86,18 +119,23 @@ function App() {
   };
 
   const handleConfirm = async () => {
+    setLoading(true);
     if (!videoInformation || coordinates.length < 1) {
+      setLoading(false);
       return;
     }
 
     const structuredCoordinates = structureCoordinates(
       videoInformation.uuid,
-      coordinates,
+      adaptCoordinatesToMedia(coordinates),
     );
 
     const chartCoordinatesData = await uploadCoordinates(structuredCoordinates);
     setChartCoordinates(chartCoordinatesData ?? undefined);
     setShowAction(ButtonActions.PREVIEW);
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    handlePreviewVideo();
+    setLoading(false);
   };
 
   const handleReset = () => {
@@ -105,15 +143,19 @@ function App() {
   };
 
   const handleUploadVideo = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setLoading(true);
+
     const file = event.target.files?.[0];
 
     if (!file) {
+      setLoading(false);
       return;
     }
 
     const videoInformationData = await uploadVideo(file);
     setShowAction(ButtonActions.PROCESS);
     setVideoInformation(videoInformationData ?? undefined);
+    setLoading(false);
   };
 
   const handleExit = () => {
@@ -132,6 +174,25 @@ function App() {
     setShowChart(false);
   };
 
+  const toggleModal = () => {
+    setShowSaveModal((prevState) => !prevState);
+  };
+
+  const handleSaveProcessedVideo = async (title: string) => {
+    if (!videoInformation || !chartCoordinates) {
+      return;
+    }
+
+    const videoData: SaveVideoInformation = {
+      id: videoInformation.uuid,
+      uuid: videoInformation.uuid,
+      name: title.trim(),
+      coordinates: JSON.stringify(chartCoordinates.trackingData),
+    };
+
+    await saveVideo(videoData);
+  };
+
   return (
     <div>
       <Header
@@ -139,31 +200,43 @@ function App() {
         onExit={handleExit}
         logo={logo}
       />
-      { showAction === ButtonActions.UPLOAD && (
-        <HeroSection
-          openFilePicker={openFilePicker}
-          fileInputRef={fileInputRef}
-          onUploadVideo={handleUploadVideo}
-        />
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          {showAction === ButtonActions.UPLOAD && (
+            <HeroSection
+              openFilePicker={openFilePicker}
+              fileInputRef={fileInputRef}
+              onUploadVideo={handleUploadVideo}
+            />
+          )}
+          {videoInformation && showAction !== ButtonActions.PREVIEW && (
+            <VideoFrame
+              src={videoInformation.frameImageUrl}
+              alt="Image"
+              width={videoInformation.resolution.width}
+              height={videoInformation.resolution.height}
+              onPointsSelect={handleClicks}
+              coordinates={coordinates}
+              offset={coordinatesOffset}
+            />
+          )}
+
+          {showAction === ButtonActions.PREVIEW
+            && showVideo && (
+            <VideoPreview src={chartCoordinates?.videoUrl ?? ''} />
+          )}
+
+          {showAction === ButtonActions.PREVIEW
+            && showChart && <Chart chartData={chartCoordinates?.trackingData!} />}
+          <SaveVideoModal
+            isOpen={showSaveModal}
+            onRequestClose={toggleModal}
+            onSave={handleSaveProcessedVideo}
+          />
+        </>
       )}
-      { videoInformation && showAction !== ButtonActions.PREVIEW
-        && <VideoFrame
-          src={videoInformation.frameImageUrl}
-          alt="Image"
-          width={videoInformation.resolution.width}
-          height={videoInformation.resolution.height}
-          onPointsSelect={handleClicks}
-          coordinates={coordinates}
-          offset={coordinatesOffset}
-        /> }
-
-      { showAction === ButtonActions.PREVIEW
-        && showVideo
-        && <VideoPreview src={chartCoordinates?.videoUrl ?? ''} />}
-
-      {showAction === ButtonActions.PREVIEW
-        && showChart
-        && <Chart chartData={chartCoordinates?.trackingData!} />}
       <ActionContainer
         showAction={showAction}
         onConfirm={handleConfirm}
@@ -172,6 +245,7 @@ function App() {
         onPreviewChart={handlePreviewChart}
         onPreviewVideo={handlePreviewVideo}
         onReset={handleReset}
+        onSaveVideo={toggleModal}
       />
     </div>
   );

@@ -28,3 +28,10 @@ export interface CoordinatesChartInformation {
   videoUrl: string,
   trackingData: IChartData[][];
 }
+
+export interface SaveVideoInformation {
+  id: string,
+  uuid: string,
+  name: string,
+  coordinates: string,
+}

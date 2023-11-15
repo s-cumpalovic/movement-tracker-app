@@ -5,10 +5,12 @@ interface VideoPreviewProps {
 }
 
 const VideoPreview: React.FC<VideoPreviewProps> = ({ src }) => (
-  <video controls>
-    <source src={src} />
-    <track kind="captions" label="English" srcLang="en" default />
-  </video>
+  <div className="video-container">
+    <video controls>
+      <source src={src} />
+      <track kind="captions" label="English" srcLang="en" default />
+    </video>
+  </div>
 );
 
 export default VideoPreview;
