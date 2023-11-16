@@ -8,6 +8,10 @@
 @import 'styles/apexchart.css';
 @import 'styles/save-video-modal.css';
 @import 'styles/loader.css';
+@import 'styles/records.css';
+@import 'styles/no-records.css';
+@import 'styles/confirm-modal.css';
+@import 'styles/delete-modal.css';
 
 .html {
     font-size: 16px;

@@ -1,0 +1,11 @@
+.delete-modal-title {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.delete-modal-title h2 {
+    font-size: 1rem;
+    font-weight: 400;
+    padding: 2rem
+}

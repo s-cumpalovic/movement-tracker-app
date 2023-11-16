@@ -17,6 +17,8 @@
     "react/prop-types": "off",
     "@typescript-eslint/indent": ["error", 2],
     "no-console": "off",
+    "no-tabs": "off",
+    "import/prefer-default-export": "off",
     "@typescript-eslint/comma-dangle": ["error", {
       "arrays": "always-multiline",
       "objects": "always-multiline",

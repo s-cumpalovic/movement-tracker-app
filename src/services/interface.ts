@@ -35,3 +35,11 @@ export interface SaveVideoInformation {
   name: string,
   coordinates: string,
 }
+
+export interface SpecificVideoInformation {
+  uuid: string;
+  name: string;
+  created_at: string;
+  coordinates: string;
+  videoUrl: string;
+}

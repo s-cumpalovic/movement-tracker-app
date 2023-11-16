@@ -16,7 +16,6 @@ const SaveVideoModal: React.FC<SaveVideoModalProps> = ({
   const handleSave = () => {
     onSave(title);
     setTitle('');
-    onRequestClose();
   };
 
   return (

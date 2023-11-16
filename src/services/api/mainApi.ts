@@ -2,7 +2,9 @@ import axios from 'axios';
 import { API_URL, endpoints } from '../constants';
 import {
   CoordinatesChartInformation,
-  CoordinatesInformation, SaveVideoInformation,
+  CoordinatesInformation,
+  SaveVideoInformation,
+  SpecificVideoInformation,
   VideoInformation,
 } from '../interface';
 
@@ -32,6 +34,36 @@ export async function uploadCoordinates(coordinates: CoordinatesInformation) {
 export async function saveVideo(data: SaveVideoInformation) {
   try {
     const response = await axios.post<CoordinatesChartInformation>(`${API_URL}${endpoints.CREATE_VIDEO}`, data);
+    return response.data;
+  } catch (error: unknown) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getAllRecords() {
+  try {
+    const response = await axios.get<any>(`${API_URL}${endpoints.ALL_RECORDS}`);
+    return response.data;
+  } catch (error: unknown) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getSpecificRecord(videoUuid: string) {
+  try {
+    const response = await axios.get<SpecificVideoInformation>(`${API_URL}${endpoints.ALL_RECORDS}/${videoUuid}`);
+    return response.data;
+  } catch (error: unknown) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function deleteRecord(videoUuid: string) {
+  try {
+    const response = await axios.delete<SpecificVideoInformation>(`${API_URL}${endpoints.ALL_RECORDS}/${videoUuid}`);
     return response.data;
   } catch (error: unknown) {
     console.error(error);

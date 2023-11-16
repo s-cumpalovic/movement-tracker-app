@@ -58,9 +58,6 @@ const Chart: React.FC<ChartProps> = ({ chartData }) => {
     },
     toolbar: {
       show: true,
-      tools: {
-        download: '<img alt="pera" src="https://picsum.photos/60" class="ico-download" width="50">',
-      },
     },
   };
 

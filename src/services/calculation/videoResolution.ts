@@ -19,5 +19,3 @@ export const structureCoordinates = (
 
   return structuredCoordinates;
 };
-
-export const PERA = 'pera';
