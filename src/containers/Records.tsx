@@ -11,6 +11,7 @@ import DeleteModal from '../components/Modal/DeleteModal';
 const Records: React.FC = () => {
   const [records, setRecords] = useState<IRecord[] | undefined>();
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
+  const [deleteRecordId, setDeleteRecordId] = useState<string | undefined>();
 
   useEffect(() => {
     (async () => {
@@ -35,8 +36,25 @@ const Records: React.FC = () => {
     }
   };
 
-  const handleDeleteRecord = async (videoUuid: string) => {
-    await deleteRecord(videoUuid);
+  const handleDeleteModal = (id: string) => {
+    setDeleteRecordId(id);
+
+    toggleModal();
+  };
+
+  const onSuccessDelete = () => {
+    const filteredRecords = records?.filter((record) => record.uuid !== deleteRecordId);
+    setRecords(filteredRecords);
+    setDeleteRecordId(undefined);
+  };
+
+  const handleDeleteRecord = async () => {
+    if (!deleteRecordId) {
+      return;
+    }
+
+    await deleteRecord(deleteRecordId, onSuccessDelete);
+    toggleModal();
   };
 
   const deleteLabel = ''
@@ -52,7 +70,7 @@ const Records: React.FC = () => {
           {records && records.length > 0 ? (
             <RecordsTable
               records={records}
-              onDeleteRecord={toggleModal}
+              onDeleteRecord={handleDeleteModal}
               onPreviewRecord={handlePreviewRecord}
             />
           ) : (

@@ -20,6 +20,7 @@ const PreviewProcessResult: React.FC = () => {
   const [showNotificationModal, setShowNotificationModal] = useState<boolean>(false);
   const [showVideo, setShowVideo] = useState<boolean>(true);
   const [showChart, setShowChart] = useState<boolean>(false);
+  const [isVideoSaved, setIsVideoSaved] = useState<boolean>(false);
 
   const toggleSaveModal = () => {
     setShowSaveModal((prevState) => !prevState);
@@ -45,6 +46,7 @@ const PreviewProcessResult: React.FC = () => {
 
     toggleSaveModal();
     toggleNotificationModal();
+    setIsVideoSaved(true);
     setTimeout(() => toggleNotificationModal(), 2000);
   };
 
@@ -84,7 +86,7 @@ const PreviewProcessResult: React.FC = () => {
             onPreviewVideo={handlePreviewVideo}
             onPreviewChart={handlePreviewChart}
           />
-          { !specificRecord && <SaveVideoButton onClick={toggleSaveModal} /> }
+          { !specificRecord && !isVideoSaved && <SaveVideoButton onClick={toggleSaveModal} /> }
         </div>
       </div>
     </>

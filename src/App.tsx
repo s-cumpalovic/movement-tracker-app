@@ -1,5 +1,7 @@
-import React from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import React, { useEffect, useRef } from 'react';
+import {
+  Route, Routes, useLocation, useNavigate,
+} from 'react-router-dom';
 import Header from './containers/Header';
 import LandingSection from './containers/LandingSection';
 import CoordinatesProcessor from './containers/CoordinatesProcessor';
@@ -10,6 +12,20 @@ import Records from './containers/Records';
 
 const App: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const isMounted = useRef(true);
+
+  useEffect(() => {
+    if (isMounted.current) {
+      if ('onbeforeunload' in window) {
+        navigate(ROUTES.DEFAULT);
+      }
+    }
+
+    return () => {
+      isMounted.current = false;
+    };
+  }, [navigate]);
 
   return (
     <>
