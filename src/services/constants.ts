@@ -5,4 +5,4 @@ export const endpoints = {
   ALL_RECORDS: 'records',
 };
 
-export const API_URL = 'http://localhost:8000/api/';
+export const API_URL = 'http://localhost:8100/api/';
